@@ -15,10 +15,12 @@ library(ggplot2)
 drivers <- read_delim("../bad-drivers.csv") %>% filter(!State =="District of Columbia")
 temperatures <- read_delim("../average-temperatures-by-state-2023.csv") %>% filter(!state =="District of Columbia") %>% select(state, AverageTemperatureF, AverageTemperatureAvgAnnualPrecipitationIn)
 education <- read_delim("../educational-attainment-by-state-2023.csv") %>% filter(!state =="District of Columbia") %>% select(state, PercentHighSchoolOrHigher, PercentBachelorsOrHigher)
+politics  <- read_delim("../political-parties-by-state-2023.csv")  %>% filter(!state =="District of Columbia") %>% select(state, PoliticalPartiesDemocratLeanDem, PoliticalPartiesRepublicanLeanRep, PoliticalPartiesNoLean)
 
 
 names(education)[names(education) == 'state'] <- 'State'
 names(temperatures)[names(temperatures) == 'state'] <- 'State'
+names(politics)[names(politics) == 'state'] <- 'State'
 
 drivers
 temperatures
@@ -26,6 +28,16 @@ education
 
 drivers <- merge(drivers, temperatures, by = "State")
 drivers <- merge(drivers, education, by = "State")
-
+drivers <- merge(drivers, politics, by = "State")
 drivers
 ```
+
+
+```{r}
+drivers$party <- apply(drivers[, c("PoliticalPartiesDemocratLeanDem", "PoliticalPartiesRepublicanLeanRep", "PoliticalPartiesNoLean")], 1, function(row) {
+  parties <- c("Democrat", "Republican", "NoLean")
+  parties[which.max(row)]
+})
+drivers
+```
+
