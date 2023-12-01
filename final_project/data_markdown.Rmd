@@ -12,9 +12,20 @@ library(ggplot2)
 library(tidyverse)
 library(ggplot2)
 
-drivers <- read_delim("../bad-drivers.csv")
-temperatures <- read_delim("../average-temperatures-by-state-2023.csv")
-education <- read_delim("../educational-attainment-by-state-2023.csv")
+drivers <- read_delim("../bad-drivers.csv") %>% filter(!State =="District of Columbia")
+temperatures <- read_delim("../average-temperatures-by-state-2023.csv") %>% filter(!state =="District of Columbia") %>% select(state, AverageTemperatureF, AverageTemperatureAvgAnnualPrecipitationIn)
+education <- read_delim("../educational-attainment-by-state-2023.csv") %>% filter(!state =="District of Columbia") %>% select(state, PercentHighSchoolOrHigher, PercentBachelorsOrHigher)
+
+
+names(education)[names(education) == 'state'] <- 'State'
+names(temperatures)[names(temperatures) == 'state'] <- 'State'
+
+drivers
+temperatures
+education
+
+drivers <- merge(drivers, temperatures, by = "State")
+drivers <- merge(drivers, education, by = "State")
 
 drivers
 ```
