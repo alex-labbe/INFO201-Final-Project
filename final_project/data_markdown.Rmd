@@ -13,12 +13,14 @@ library(tidyverse)
 library(ggplot2)
 
 drivers <- read_delim("../bad-drivers.csv") %>% filter(!State =="District of Columbia")
-temperatures <- read_delim("../average-temperatures-by-state-2023.csv") %>% filter(!state =="District of Columbia") %>% select(state, AverageTemperatureF, AverageTemperatureAvgAnnualPrecipitationIn)
+temperatures <- read_delim("../average-temperatures-by-state-2023.csv") %>% filter(!state =="District of Columbia") %>% select(state, AverageTemperatureF, AverageTemperatureAvgAnnualPrecipitationIn, AverageTemperatureAvgHighF, AverageTemperatureAvgLowF)
 education <- read_delim("../educational-attainment-by-state-2023.csv") %>% filter(!state =="District of Columbia") %>% select(state, PercentHighSchoolOrHigher, PercentBachelorsOrHigher)
+politics  <- read_delim("../political-parties-by-state-2023.csv")  %>% filter(!state =="District of Columbia") %>% select(state, PoliticalPartiesDemocratLeanDem, PoliticalPartiesRepublicanLeanRep, PoliticalPartiesNoLean)
 
 
 names(education)[names(education) == 'state'] <- 'State'
 names(temperatures)[names(temperatures) == 'state'] <- 'State'
+names(politics)[names(politics) == 'state'] <- 'State'
 
 drivers
 temperatures
@@ -26,6 +28,49 @@ education
 
 drivers <- merge(drivers, temperatures, by = "State")
 drivers <- merge(drivers, education, by = "State")
-
+drivers <- merge(drivers, politics, by = "State")
 drivers
+```
+
+
+```{r}
+drivers$party <- apply(drivers[, c("PoliticalPartiesDemocratLeanDem", "PoliticalPartiesRepublicanLeanRep", "PoliticalPartiesNoLean")], 1, function(row) {
+  parties <- c("Democrat", "Republican", "NoLean")
+  parties[which.max(row)]
+})
+drivers
+```
+lets start by seeing the relationship driver crashes per state
+```{r}
+state_vs_collisions <- ggplot(drivers, aes(x=State, y=`Number of drivers involved in fatal collisions per billion miles`)) + geom_bar(stat = "identity") + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+state_vs_collisions
+```
+we would like to know if there are relationships between other factors states have and see if that could be affecting these results.
+
+first we wanted to see if the average temperature of the state is affecting this
+```{r}
+state_vs_collisions <- ggplot(drivers, aes(x=State, y=`Number of drivers involved in fatal collisions per billion miles`, fill=AverageTemperatureF)) + geom_bar(stat = "identity") + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+state_vs_collisions
+```
+As we can see, there is not much correlation between average tempurature, maybe we try to see if the annual percipitation affects collisions?
+
+```{r}
+
+ggplot(drivers, aes(x=State, y=`Number of drivers involved in fatal collisions per billion miles`, fill=AverageTemperatureAvgAnnualPrecipitationIn)) + geom_bar(stat = "identity") + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
+
+```
+Maybe the states with higher high temperatures have more collisions because the heat is getting to the drivers? 
+```{r}
+ggplot(drivers, aes(AverageTemperatureAvgHighF, `Number of drivers involved in fatal collisions per billion miles`)) + geom_point()
+```
+```{r}
+ggplot(drivers, aes(AverageTemperatureAvgLowF, `Number of drivers involved in fatal collisions per billion miles`)) + geom_point()
+```
+
+
+collisions VS education data
+
+```{r}
+
 ```
