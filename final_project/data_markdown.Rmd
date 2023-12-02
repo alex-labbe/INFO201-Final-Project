@@ -62,10 +62,11 @@ ggplot(drivers, aes(x=State, y=`Number of drivers involved in fatal collisions p
 ```
 Maybe the states with higher high temperatures have more collisions because the heat is getting to the drivers? 
 ```{r}
-ggplot(drivers, aes(AverageTemperatureAvgHighF, `Number of drivers involved in fatal collisions per billion miles`)) + geom_point()
+ggplot(drivers, aes(x=State, y=`Number of drivers involved in fatal collisions per billion miles`, fill=AverageTemperatureAvgHighF)) + geom_bar(stat = "identity") + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+
 ```
 ```{r}
-ggplot(drivers, aes(AverageTemperatureAvgLowF, `Number of drivers involved in fatal collisions per billion miles`)) + geom_point()
+ggplot(drivers, aes(x=State, y=`Number of drivers involved in fatal collisions per billion miles`, fill=AverageTemperatureAvgLowF)) + geom_bar(stat = "identity") + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 ```
 
 
