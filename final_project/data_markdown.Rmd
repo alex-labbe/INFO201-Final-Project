@@ -69,9 +69,41 @@ ggplot(drivers, aes(x=State, y=`Number of drivers involved in fatal collisions p
 ggplot(drivers, aes(x=State, y=`Number of drivers involved in fatal collisions per billion miles`, fill=AverageTemperatureAvgLowF)) + geom_bar(stat = "identity") + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 ```
 
+```{r}
+ggplot(drivers, aes(x= State, y =`Number of drivers involved in fatal collisions per billion miles`, fill = PercentBachelorsOrHigher)) +
+  geom_bar(stat = "identity") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  labs(x="State", y="Number of fatal collisions per billion", fill="% of Bachelors or Higher", title = "Fatal Collisions vs. % of Bachelors or Higher Degree")
+```
 
-collisions VS education data
 
 ```{r}
 
+ggplot(drivers, aes(x= State, y =`Number of drivers involved in fatal collisions per billion miles`, fill = PercentHighSchoolOrHigher)) +
+  geom_bar(stat = "identity") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  labs(x="State", y="Number of fatal collisions per billion", fill="% of Highschool or Higher", title = "Fatal Collisions vs. % of Highschool or Higher Degree")
 ```
+
+
+```{r}
+# doesnt work, creation of party col must be missing
+average_collision_by_party <- drivers %>%
+  group_by(party) %>%
+  summarize(average_collision = mean(`Number of drivers involved in fatal collisions per billion miles`))
+
+average_collision_by_party %>%
+  ggplot(aes(x = party, y = average_collision, fill = party)) +
+  geom_bar(stat = "identity", position = "dodge", width = 0.7) +
+  labs(x = "Political Party", y = "Average Collision") +
+  ggtitle("Average Collision by Political Party") +
+  scale_fill_manual(values = c("Republican" = "red", "Democrat" = "blue"))
+```
+
+```{r}
+ggplot(drivers, aes(x= State, y =`Number of drivers involved in fatal collisions per billion miles`, fill = `Percentage Of Drivers Involved In Fatal Collisions Who Were Not Distracted`)) +
+  geom_bar(stat = "identity") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  labs(x="State", y="Number of fatal collisions per billion", fill="% of Non-Distracted Drivers", title = "Fatal Collisions vs. % of Non-Distracted Drivers Fatal Collisions")
+```
+
