@@ -115,3 +115,9 @@ ggplot(drivers, aes(x= State, y =`Number of drivers involved in fatal collisions
   labs(x="State", y="Number of fatal collisions per billion", fill="% of Non-Distracted Drivers", title = "Fatal Collisions vs. % of Non-Distracted Drivers Fatal Collisions")
 ```
 
+```{r}
+ggplot(drivers, aes(x=State, y=`Number of drivers involved in fatal collisions per billion miles`, fill = `Percentage Of Drivers Involved In Fatal Collisions Who Were Alcohol-Impaired`)) + 
+  geom_bar(stat = "identity") + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 6)) + 
+  labs(x="State", y="Number of fatal collisions per billion", fill="% of Drivers who were Alcohol Impaired", title = "Fatal Collisions vs. % of Alcohol Impaired Drivers Fatal Collisions")
+```
