@@ -5,7 +5,7 @@ author: "Alexandre Labbe, Anushka Nayak, Chelsea Pang, Megan Pham"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
+```{r setup, echo=TRUE}
 knitr::opts_chunk$set(echo = TRUE)
 library(dplyr)
 library(ggplot2)
@@ -185,6 +185,7 @@ We found that creating an individual comparison for each factor to the number of
 
 ## Results
 
+### State vs Collisions
 
 The first graph we created explored the relationship between US states and the number of drivers involved in fatal collisions (per billion miles). Taking a look at the bar graph, it is apparent that the three states that had the highest number of drivers involved in fatal collisions per billion miles were North Dakota, South Carolina, and West Virginia, which had 23.9, 23.9, and 23.8 drivers respectively. The three states that had the lowest number of drivers involved in fatal collisions were Massachusetts, Minnesota, and Washington, which had 8.2, 9.6, and 10.6 drivers involved in fatal collisions per billion miles, respectively. Looking at this data alone, we were unable to come to any conclusions regarding the relationship between US state or region of the US and the number of drivers involved in fatal collisions. 
 
@@ -194,13 +195,17 @@ state_vs_collisions <- ggplot(drivers, aes(x=State, y=`Number of drivers involve
 state_vs_collisions
 ```
 
-The first correlation we wanted to further explore was how a states temperature was affecting its collision rate. We graphed the same relationship above, but colored the states by temperature
+
+### Collisions vs Average Temperature
+
+The first correlation we wanted to further explore was how a states temperature was affecting its collision rate. We graphed the same relationship above, but colored the states by their average temperature. For the same three states that had the highest number of fatal collisions, the average temperatures were 40.4, 52.4, 51.8 respectively. The three states with the lowest number of fatal collisions had average temperatures of 47.9, 41.2, 48.3 respectively. From these temperatures, we were unable to find a correlation between average temperature and collisions. 
 ```{r}
 state_vs_collisions <- ggplot(drivers, aes(x=State, y=`Number of drivers involved in fatal collisions per billion miles`, fill=AverageTemperatureF)) + geom_bar(stat = "identity") + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 state_vs_collisions
 ```
 
 
+### Collisions vs Precipitation
 
 Wanting to further explore the effects of other factors, we took a look at the relationship between precipitation and the number of drivers involved in fatal collisions per billion miles, while keeping the US state in mind. For the same three states that had the highest number of fatal collision, the average annual precipitation in inches were 18.8, 48.3, and 47.1, respectively. The three states with the lowest number of fatal collisions reported 48.6, 28.6, and 43.2 inches respectively. The average annual precipitation in inches in this dataset ranges from 10.2 inches to 59.7 inches. While a couple of the states with high fatal collision rates don’t seem to have high average annual precipitation numbers, it does seem that many of the states with higher fatal collision rates do.
 ```{r}
@@ -211,6 +216,7 @@ ggplot(drivers, aes(x=State, y=`Number of drivers involved in fatal collisions p
 
 ```
 
+### Collisions vs Average High Temperature
 
 Taking a look at the next graph, we chose to explore the relationship between average high temperature (in Fahrenheit) and the number of drivers involved in fatal collisions per billion miles, while keeping the state in mind. For the same three states with the highest fatalities, the average high temperatures are 52.2 ℉, 74.7 ℉, and 63.5 ℉, respectively. For the three states with the lowest fatalities, the average high temperatures were 58.8 ℉, 51.9 ℉, and 57.0 ℉. The values for average high temperature in this dataset range from 35.5 ℉ to 81.9 ℉. That being said, it does not seem that there is a clear correlation between high temperatures and an increase or decrease in the number of drivers involved in fatal collisions. 
 ```{r}
@@ -219,11 +225,15 @@ ggplot(drivers, aes(x=State, y=`Number of drivers involved in fatal collisions p
 ```
 
 
+### Collisions vs Average Low Temperature
+
 Similarly, we were curious whether low temperatures affected the number of drivers involved in fatal collisions, thinking that cooler temperatures may lead to more dangerous road conditions. Taking a look at the graph, the three states with the highest fatalities had average low temperatures of 29.8 ℉, 52.0 ℉, and 41.7 ℉, respectively. The three states with the lowest fatalities had average low temperatures of 38.7 ℉, 31.4 ℉, and 37.6 ℉. With the range of the average low-temperature values being between 20.4 ℉ and 60.9 ℉, it doesn’t seem that there is any correlation between low temperatures and the number of drivers involved in fatal collisions. 
 ```{r}
 ggplot(drivers, aes(x=State, y=`Number of drivers involved in fatal collisions per billion miles`, fill=AverageTemperatureAvgLowF)) + geom_bar(stat = "identity") + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 ```
 
+
+### Collisions vs Education Attainment
 
 The next factor we investigated was the effect of education on the number of fatal collisions. We hypothesized that the higher the education level, the lower the rate of fatal collisions. The three states with the highest number of fatal collisions were 30.7%, 29.0%, and 21.3% with a bachelor's degree or higher. The three states with the lowest number of fatal collisions were 44.5%, 36.8%, and 36.7% educated with a bachelor’s degree or higher. With the range of percentages being between 21.3% and 44.5%, it is clear that the states with higher numbers of fatal collisions were less educated whereas the states with lower numbers of fatal collisions were more educated. Looking at the graph as well, it is visible that the states with taller bars (greater number of fatal collisions) are darker in color, meaning that they have lower percentages of having a bachelor’s or higher degree. Contrastingly, the states with shorter bars (lower number of fatal collisions) are lighter in color, meaning that they have greater percentages of having a bachelor’s or higher degree. This aligns with the correlation that we had previously hypothesized. 
 ```{r}
@@ -241,7 +251,7 @@ ggplot(drivers, aes(x= State, y =`Number of drivers involved in fatal collisions
 
 
 
-
+### Collisions vs Alcohol Impaired Fatal Collisions
 
 Taking a closer look at the graph that plots the percentage of drivers who were alcohol-impaired against the number of fatal collisions while keeping state in mind, it is evident that of the three states with the greatest number of fatal collisions, 42%, 41%, and 28% of drivers were alcohol-impaired, respectively. Of the three states with the lowest number of fatal collisions, 35%, 29%, and 33% of drivers were alcohol-impaired, respectively. With the range of percentages in this column of the dataset being between 16% and 44%, we are unable to come to any conclusion regarding the effect of being alcohol-impaired on the number of fatal collisions as there are high and low percentages on both ends of the range of collision fatalities. 
 ```{r}
@@ -251,6 +261,8 @@ ggplot(drivers, aes(x=State, y=`Number of drivers involved in fatal collisions p
   labs(x="State", y="Number of fatal collisions per billion", fill="% of Drivers who were Alcohol Impaired", title = "Fatal Collisions vs. % of Alcohol Impaired Drivers Fatal Collisions")
 ```
 
+
+### Average Collision by Political Party
 
 Our final graph summarizes the data throughout this report by exploring the breakdown of average fatal collisions by political party. This graph shows that state residents who identify as Democrats have a lower average rate of fatal collisions as compared to those who identify as Republicans, with the average number of collisions at 18% for Republicans and 14% for Democrats.  This graph does not intend to prove a correlation between the two variables but rather show the breakdown between two categories of residents within the states.
 ```{r}
