@@ -28,6 +28,16 @@ drivers <- merge(drivers, education, by = "State")
 drivers <- merge(drivers, politics, by = "State")
 
 ```
+
+```{r}
+drivers$party <- apply(drivers[, c("PoliticalPartiesDemocratLeanDem", "PoliticalPartiesRepublicanLeanRep", "PoliticalPartiesNoLean")], 1, function(row) {
+  parties <- c("Democrat", "Republican", "NoLean")
+  parties[which.max(row)]
+})
+
+drivers <- drivers %>%
+  mutate(AvgTemperatureC = (AverageTemperatureF - 32) * 5/9)
+```
 # Introduction
 How old were you when you first started driving a car? In most states, 15-year-olds are allowed to get a permit and start learning how to drive. I remember learning how to drive in the summer when I turned 15 and getting my license on the day of my 16th birthday. It was an important day because it meant I was finally able to go places that I wanted by myself. I am not the only one who wanted to start driving when they were 16. According to the US Census Bureau, almost 35% of Americans from the age of 16-19 have a driver's license, and the number only grows from there as the age group goes up. This statistic not only highlights the widespread eagerness to drive but also emphasizes the profound impact of driving on everyday American life, amplifying the imperative for a nuanced understanding of its associated risks.
 
@@ -155,58 +165,73 @@ Party - chr
 In this current state of our dataset, there are no missing values, non-plausible values, or other quality issues in the relevant variables. Since we took care of filtering out unnecessary rows and columns before combining into one dataset.
 
 
-```{r}
-drivers$party <- apply(drivers[, c("PoliticalPartiesDemocratLeanDem", "PoliticalPartiesRepublicanLeanRep", "PoliticalPartiesNoLean")], 1, function(row) {
-  parties <- c("Democrat", "Republican", "NoLean")
-  parties[which.max(row)]
-})
-```
-lets start by seeing the relationship driver crashes per state
+## Methods
+
+In our in-depth analysis, we observed data from four distinct datasets that all focused around the number of drivers involved in the number of fatal collisions in each state. To bring all this information together, we used a merging method that combines the data based on a shared factor, this factor being the individual state. We aimed to develop a comprehensive and nuanced understanding of the diverse factors that contribute to or might potentially influence the rates of fatal collisions across different states.
+
+
+In the selection of variables for our analysis, we strategically considered a range of factors in various dimensions. These consist of weather elements, including average high and low temperatures, as well as the average precipitation. We considered these components in understanding the impact of weather conditions on fatal collisions. Further factors we explored was the background of the individuals, this includes their education levels, distinguishing between individuals with a high school or higher degree and those with a bachelor's or higher degree. Furthermore, we classified each state based on its political leanings, such as, Republican-leaning, Democrat-leaning, or falls within a neutral stance. We hope to find, if any, potential correlations among drivers and their behavior in relation to the political tendencies of the respective states. Alcohol-impaired drivers was another factor that we acknowledged that could have a critical impact on our analysis as it is notoriously known for causing incidents. Finally, we wanted to see the significance of drivers that were not distracted during fatal collisions to gain a fuller understanding. Despite the abundance of other variables, we decided these are the most relevant variables that can produce suitable findings to our objective. 
+
+
+Since our primary focus was looking over the fatal collisions by state, the district of columbia was not a state that was included in our data set. Hence a technical decision that we deployed was to exclude all data for the district of columbia in each of the dataset, through the use of filtering. From this we hope to keep our data and findings to be more consistent, thorough, and reliable. 
+In assembling our samples, we selected variables that contained data from all 50 states, aiming for a full representation of the country. These variables were specifically chosen for their potential impact on drivers, characteristics of drivers, environmental conditions, and specific state affiliations, which could possibly contribute to the rate of fatal collisions. Before merging these datasets into a singular data frame, we carefully sifted through the data by selecting our variables and discarding any irrelevant variables that did not align with the targeted focus of our research.
+
+
+We also created 2 new columns, a categorical party column stating the state's political stance, a continuous data column describing each state's average temperature in Celsius to be more accommodating to those who don't use the imperial system, and a summarizing data frame grouping the state's political stance and calculating the mean collisions based on the political stance. 
+
+
+We found that creating an individual comparison for each factor to the number of fatal collisions per billion by state would be the most productive method in understanding if the factor has any impact on fatal collisions. With that being said, isolating our factors may pose challenges in recognizing potential interactions with other variables and understanding the complex relationships that may exist among them. Furthermore, this approach makes it more difficult to interpret the results and how it compares to the other variables. As for displaying our data, after attempting various graphs, we concluded that having a bar graph was the most visually appealing and digestible graph to understand in answering our questions. However, with this choice in comparison with other graphs, bar graphs can be difficult to notice trends of our data and not efficient at presenting non-discrete data. Additionally, we opted not to use any complex statistical methods, such as regression, in our analysis.
+
+
+## Results
+
+
+The first graph we created explored the relationship between US states and the number of drivers involved in fatal collisions (per billion miles). Taking a look at the bar graph, it is apparent that the three states that had the highest number of drivers involved in fatal collisions per billion miles were North Dakota, South Carolina, and West Virginia, which had 23.9, 23.9, and 23.8 drivers respectively. The three states that had the lowest number of drivers involved in fatal collisions were Massachusetts, Minnesota, and Washington, which had 8.2, 9.6, and 10.6 drivers involved in fatal collisions per billion miles, respectively. Looking at this data alone, we were unable to come to any conclusions regarding the relationship between US state or region of the US and the number of drivers involved in fatal collisions. 
+
+
 ```{r}
 state_vs_collisions <- ggplot(drivers, aes(x=State, y=`Number of drivers involved in fatal collisions per billion miles`)) + geom_bar(stat = "identity") + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 state_vs_collisions
 ```
-we would like to know if there are relationships between other factors states have and see if that could be affecting these results.
 
-first we wanted to see if the average temperature of the state is affecting this
+The first correlation we wanted to further explore was how a states temperature was affecting its collision rate. We graphed the same relationship above, but colored the states by temperature
 ```{r}
 state_vs_collisions <- ggplot(drivers, aes(x=State, y=`Number of drivers involved in fatal collisions per billion miles`, fill=AverageTemperatureF)) + geom_bar(stat = "identity") + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 state_vs_collisions
 ```
-As we can see, there is not much correlation between average tempurature, maybe we try to see if the annual percipitation affects collisions?
 
+
+
+Wanting to further explore the effects of other factors, we took a look at the relationship between precipitation and the number of drivers involved in fatal collisions per billion miles, while keeping the US state in mind. For the same three states that had the highest number of fatal collision, the average annual precipitation in inches were 18.8, 48.3, and 47.1, respectively. The three states with the lowest number of fatal collisions reported 48.6, 28.6, and 43.2 inches respectively. The average annual precipitation in inches in this dataset ranges from 10.2 inches to 59.7 inches. While a couple of the states with high fatal collision rates don’t seem to have high average annual precipitation numbers, it does seem that many of the states with higher fatal collision rates do.
 ```{r}
 
-ggplot(drivers, aes(x=State, y=`Number of drivers involved in fatal collisions per billion miles`, fill=AverageTemperatureAvgAnnualPrecipitationIn)) + geom_bar(stat = "identity") + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+ggplot(drivers, aes(x=State, y=`Number of drivers involved in fatal collisions per billion miles`, fill=AverageTemperatureAvgAnnualPrecipitationIn)) + geom_bar(stat = "identity") + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))  + 
+  labs(fill='Precipitation (in)')
 
 
 ```
-Maybe the states with higher high temperatures have more collisions because the heat is getting to the drivers? 
+
+
+Taking a look at the next graph, we chose to explore the relationship between average high temperature (in Fahrenheit) and the number of drivers involved in fatal collisions per billion miles, while keeping the state in mind. For the same three states with the highest fatalities, the average high temperatures are 52.2 ℉, 74.7 ℉, and 63.5 ℉, respectively. For the three states with the lowest fatalities, the average high temperatures were 58.8 ℉, 51.9 ℉, and 57.0 ℉. The values for average high temperature in this dataset range from 35.5 ℉ to 81.9 ℉. That being said, it does not seem that there is a clear correlation between high temperatures and an increase or decrease in the number of drivers involved in fatal collisions. 
 ```{r}
 ggplot(drivers, aes(x=State, y=`Number of drivers involved in fatal collisions per billion miles`, fill=AverageTemperatureAvgHighF)) + geom_bar(stat = "identity") + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
 ```
+
+
+Similarly, we were curious whether low temperatures affected the number of drivers involved in fatal collisions, thinking that cooler temperatures may lead to more dangerous road conditions. Taking a look at the graph, the three states with the highest fatalities had average low temperatures of 29.8 ℉, 52.0 ℉, and 41.7 ℉, respectively. The three states with the lowest fatalities had average low temperatures of 38.7 ℉, 31.4 ℉, and 37.6 ℉. With the range of the average low-temperature values being between 20.4 ℉ and 60.9 ℉, it doesn’t seem that there is any correlation between low temperatures and the number of drivers involved in fatal collisions. 
 ```{r}
 ggplot(drivers, aes(x=State, y=`Number of drivers involved in fatal collisions per billion miles`, fill=AverageTemperatureAvgLowF)) + geom_bar(stat = "identity") + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 ```
 
+
+The next factor we investigated was the effect of education on the number of fatal collisions. We hypothesized that the higher the education level, the lower the rate of fatal collisions. The three states with the highest number of fatal collisions were 30.7%, 29.0%, and 21.3% with a bachelor's degree or higher. The three states with the lowest number of fatal collisions were 44.5%, 36.8%, and 36.7% educated with a bachelor’s degree or higher. With the range of percentages being between 21.3% and 44.5%, it is clear that the states with higher numbers of fatal collisions were less educated whereas the states with lower numbers of fatal collisions were more educated. Looking at the graph as well, it is visible that the states with taller bars (greater number of fatal collisions) are darker in color, meaning that they have lower percentages of having a bachelor’s or higher degree. Contrastingly, the states with shorter bars (lower number of fatal collisions) are lighter in color, meaning that they have greater percentages of having a bachelor’s or higher degree. This aligns with the correlation that we had previously hypothesized. 
 ```{r}
 ggplot(drivers, aes(x= State, y =`Number of drivers involved in fatal collisions per billion miles`, fill = PercentBachelorsOrHigher)) +
   geom_bar(stat = "identity") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   labs(x="State", y="Number of fatal collisions per billion", fill="% of Bachelors or Higher", title = "Fatal Collisions vs. % of Bachelors or Higher Degree")
-```
 
-
-```{r}
-
-ggplot(drivers, aes(x= State, y =`Number of drivers involved in fatal collisions per billion miles`, fill = PercentBachelorsOrHigher)) +
-  geom_bar(stat = "identity") +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
-  labs(x="State", y="Number of fatal collisions per billion", fill="% of Bachelors or Higher", title = "Fatal Collisions vs. % of Bachelors or Higher Degree")
-```
-
-```{r}
 
 ggplot(drivers, aes(x= State, y =`Number of drivers involved in fatal collisions per billion miles`, fill = PercentHighSchoolOrHigher)) +
   geom_bar(stat = "identity") +
@@ -215,8 +240,21 @@ ggplot(drivers, aes(x= State, y =`Number of drivers involved in fatal collisions
 ```
 
 
+
+
+
+Taking a closer look at the graph that plots the percentage of drivers who were alcohol-impaired against the number of fatal collisions while keeping state in mind, it is evident that of the three states with the greatest number of fatal collisions, 42%, 41%, and 28% of drivers were alcohol-impaired, respectively. Of the three states with the lowest number of fatal collisions, 35%, 29%, and 33% of drivers were alcohol-impaired, respectively. With the range of percentages in this column of the dataset being between 16% and 44%, we are unable to come to any conclusion regarding the effect of being alcohol-impaired on the number of fatal collisions as there are high and low percentages on both ends of the range of collision fatalities. 
 ```{r}
-# doesnt work, creation of party col must be missing
+ggplot(drivers, aes(x=State, y=`Number of drivers involved in fatal collisions per billion miles`, fill = `Percentage Of Drivers Involved In Fatal Collisions Who Were Alcohol-Impaired`)) + 
+  geom_bar(stat = "identity") + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 6)) + 
+  labs(x="State", y="Number of fatal collisions per billion", fill="% of Drivers who were Alcohol Impaired", title = "Fatal Collisions vs. % of Alcohol Impaired Drivers Fatal Collisions")
+```
+
+
+Our final graph summarizes the data throughout this report by exploring the breakdown of average fatal collisions by political party. This graph shows that state residents who identify as Democrats have a lower average rate of fatal collisions as compared to those who identify as Republicans, with the average number of collisions at 18% for Republicans and 14% for Democrats.  This graph does not intend to prove a correlation between the two variables but rather show the breakdown between two categories of residents within the states.
+```{r}
+
 average_collision_by_party <- drivers %>%
   group_by(party) %>%
   summarize(average_collision = mean(`Number of drivers involved in fatal collisions per billion miles`))
@@ -227,18 +265,4 @@ average_collision_by_party %>%
   labs(x = "Political Party", y = "Average Collision") +
   ggtitle("Average Collision by Political Party") +
   scale_fill_manual(values = c("Republican" = "red", "Democrat" = "blue"))
-```
-
-```{r}
-ggplot(drivers, aes(x= State, y =`Number of drivers involved in fatal collisions per billion miles`, fill = `Percentage Of Drivers Involved In Fatal Collisions Who Were Not Distracted`)) +
-  geom_bar(stat = "identity") +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
-  labs(x="State", y="Number of fatal collisions per billion", fill="% of Non-Distracted Drivers", title = "Fatal Collisions vs. % of Non-Distracted Drivers Fatal Collisions")
-```
-
-```{r}
-ggplot(drivers, aes(x=State, y=`Number of drivers involved in fatal collisions per billion miles`, fill = `Percentage Of Drivers Involved In Fatal Collisions Who Were Alcohol-Impaired`)) + 
-  geom_bar(stat = "identity") + 
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 6)) + 
-  labs(x="State", y="Number of fatal collisions per billion", fill="% of Drivers who were Alcohol Impaired", title = "Fatal Collisions vs. % of Alcohol Impaired Drivers Fatal Collisions")
 ```
