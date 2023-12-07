@@ -1,7 +1,7 @@
 ---
-title: "driver_data"
-author: "Alexandre Labbe"
-date: "2023-11-30"
+title: "Driver Data"
+author: "Alexandre Labbe, Anushka Nayak, Chelsea Pang, Megan Pham"
+
 output: html_document
 ---
 
@@ -22,15 +22,137 @@ names(education)[names(education) == 'state'] <- 'State'
 names(temperatures)[names(temperatures) == 'state'] <- 'State'
 names(politics)[names(politics) == 'state'] <- 'State'
 
-drivers
-temperatures
-education
 
 drivers <- merge(drivers, temperatures, by = "State")
 drivers <- merge(drivers, education, by = "State")
 drivers <- merge(drivers, politics, by = "State")
-drivers
+
 ```
+# Introduction
+How old were you when you first started driving a car? In most states, 15-year-olds are allowed to get a permit and start learning how to drive. I remember learning how to drive in the summer when I turned 15 and getting my license on the day of my 16th birthday. It was an important day because it meant I was finally able to go places that I wanted by myself. I am not the only one who wanted to start driving when they were 16. According to the US Census Bureau, almost 35% of Americans from the age of 16-19 have a driver's license, and the number only grows from there as the age group goes up. This statistic not only highlights the widespread eagerness to drive but also emphasizes the profound impact of driving on everyday American life, amplifying the imperative for a nuanced understanding of its associated risks.
+
+
+My parents initially opposed my venture into driving, expressing concerns about potential irresponsible behavior and the heightened risk of car accidents. Their worries are justified, given the alarming statistics: over 6 million passenger car accidents occur annually, making road crashes a leading cause of death with more than 38,000 fatalities each year. This equates to a car crash happening every 13 minutes, substantially raising the probability of being involved in one. To assuage my parents' concerns, I reached a compromise by offering to cover my car insurance expenses in case of any incidents. Fortunately, after almost three years of driving, I've remained incident-free. However, not everyone around me has been as fortunate, as I've heard numerous stories about classmates facing consequences such as license suspension or losing their cars due to accidents. This reality underscores the importance of understanding the factors contributing to accidents to prevent them effectively.
+
+
+Our group project aims to deepen our understanding of the correlation between different factors and fatal car collisions by analyzing various datasets. We chose to analyze fatal collisions specifically because there isn’t too much research done on fatal collisions compared to general. Our project will explore the impact of distracted driving, including texting, eating, talking, and smartphone use, on the severity of car crashes. Additionally, we want to investigate how weather and road conditions in each state influence fatal collision rates. Exploring the correlation between a state's political stance and driving behaviors is another aspect we plan to delve into, as well as examining whether a state's level of education is correlated with the number of fatal collisions. We chose these variables due to their relevance to everyday life and their resonance with topics that most Americans care about. Through our research, we hope to contribute valuable insights that can inform strategies for fatal accident prevention, making driving safer for everyone.
+
+
+We know that one of the most common and dangerous things drivers engage in is being distracted while driving. I often find myself checking my text messages, fixing my makeup, or talking with friends while driving. These small gestures could be deadly because according to the National Highway Traffic Safety Administration, one in tenth fatal crashes in the United States involve distracted driving. This shows that when people are distracted, they are increasing the risk of collision. Three major distraction categories are hands, eyes, and mind off the road. Many acts we do while driving fall under these categories, sometimes even more than one. For example, eating while driving involves taking our hand off the wheel, checking ourselves in the mirror involves taking our eyes off the wheel, and texting on our cell phone involves taking all three categories off the wheel. Falling under one of these categories is already bad, but doing all three at once can be extremely dangerous. Statistics show that 430 lives were lost in 2021 due to texting while driving and 566 people died because drivers were texting.  Not only is using cell phones dangerous for the driver, but it is also dangerous for pedestrians. 
+
+
+Another factor to consider is the influence of dangerous driving conditions due to bad weather. I remember being unable to see clearly on the highway when there was heavy rain or fog. A few years ago, my dad also crashed his car while going down the hill from my house because snow and ice made the roads slippery. Research shows that precipitation, high winds, and temperature extremes are all factors that could affect driver capabilities and vehicle performance. If a driver isn’t able to see clearly or their car isn’t functioning properly, it could all increase the risk of collisions. The US Department of Transportation Federal Highway Administration found that around 21% of all car crashes are related to adverse weather conditions. 21% is a substantial number of drivers, and they can reduce the risk of getting into accidents by being aware of the weather conditions and avoiding more dangerous ones.
+
+
+Analyzing factors that influence collision rates, such as political stance and education level, presents a unique set of challenges. Research has suggested a correlation between a state's political orientation and its collision rates, with more Democratic states exhibiting lower accident rates compared to their more Republican counterparts. While this trend may be attributed to differing personal values and habits, particularly concerning distracted driving behaviors, conclusive evidence is lacking. Our project seeks to delve deeper into this nuanced relationship, aiming to provide a more comprehensive understanding of the interplay between political leanings and collision rates.
+
+
+Similarly, the connection between education level and car collisions remains unclear. Some arguments posit that individuals with lower levels of education may be more prone to accidents, often attributed to their younger age demographic. However, this hypothesis doesn't account for adults who never completed their education but may exhibit different driving behaviors. Unraveling the complexities of the education-collision relationship is a pivotal aspect of our project, as we strive to shed light on how different factors contribute to the collision landscape.
+
+
+# Explaining our data
+
+## Driver data
+
+We combined three datasets. Our interest was piqued by a dataset we found on data.world titled bad drivers. It gave a handful of data about fatal car crash data separated by state. It was published by 538, a data visualization and collection group that I find myself browsing often, so I was excited to be able to use their data for a school project. We wanted to find how various factors were affecting the crash rate. We found other data sets that separated their respective data by state and joined them with the driving data set to allow us to find correlations.
+
+
+Our initial dataset is the already mentioned bad-drivers data from 538 that we found on data.world. It was compiled for an article called “Dear Mona, Which State Has The Worst Drivers?” where Mona Chalabi, the author of the article used bar graphs to show statistics around the fatal car crashes that occur in all fifty states. She compares them and tries to answer the question asked.
+
+
+The data was sourced from the National Highway Traffic Safety Administration (NHTSA) through a random sampling of thousands of police reports from various regions. Since it is maintained by the United States Department of Transportation (USDOT) allows us to verify its credibility. The NHTSA and USDOT employ rigorous data collection and validation processes, which include quality control measures and validation processes. This ensures the accuracy and consistency of data.
+This data is publicly shared by the NHTSA freely available on their website. Their data is allowed to be used freely, but they take data privacy very seriously. They have authority to bring actions against companies or individuals that engage in unfair or deceptive acts or practices using their data.
+
+
+The dataset has fifty rows, one for each state. Every row has a plethora of information. They are as such: State, the number of drivers involved in fatal collisions per billion miles, rounded to one decimal place, the percentage of drivers involved in fatal collisions who were speeding, the percentage of drivers involved in fatal collisions who were alcohol-impaired, the percentage of drivers involved in fatal collisions who were not distracted, the percentage of drivers involved in fatal collisions who had not been involved in any previous accidents, the average car insurance premium in dollars, and the losses incurred by insurance companies for collisions per insured driver in dollars.
+We did not run into any issues with this data set, yet we were uninterested in the insurance data since we were more focused solely on the crash data.
+ 
+ 
+## Weather data
+Our first initial idea of factors that could affect states crash data was the weather conditions in that state. We found a data set that listed each state and their climate data on World Population Review. This data was made available by the NOAA National Climatic Data Center of the United States. They offer a wide variety of downloads and subsetting for environmental data. This data is protected under the Freedom of Information Act, and it is freely available for us to use.
+The data set gave us the following information separated by state: Average temperature in Fahrenheit, average temperature in Celsius, average annual precipitation in inches, average high temperature in Fahrenheit, and average low temperature in Fahrenheit.
+
+
+The only issue we ran into with this data set is that it included a row for District of Columbia, which our driver dataset did not include, so we filtered every other row. We also decided to only use Fahrenheit in our final dataset.
+ 
+
+## Education data
+
+
+The next idea we were interested in pursuing was a given states education data. We wanted to explore the idea of higher education correlating with lower crash rates. We found a dataset compiled by World Population Review that listed each state, the percentage of adults with high school education or higher, and the percentage of adults with a bachelor's degree or higher. The data was collected by the United States Census Bureau. It is freely available to use.
+
+
+Once again, the only issue we ran into was the inclusion of the District of Columbia, which we also filtered out for our final dataset.
+ 
+ 
+## Political data
+The final idea we were interested in pursuing was a given state's political leaning. We were interested in this because we were made aware of the correlation between a state's political orientation and its collision rates. We once again found a data set on World Population that had what we needed. The data was collected by Pew Research Center and is freely available to use. It represents three types of data to fully represent the layering of a state’s political affiliation. It includes the legislative majority paired with governor control, party affiliation of each state’s governor, senate, house, and percentage of adults who identify as a Democrat, Republican, or neither, gathered by a random sampling of residents.
+ 
+ 
+Once again, the only issue we ran into was the inclusion of the District of Columbia, which we also filtered out for our final dataset.
+
+
+## Final dataset
+After gathering these datasets and filtering out the unnecessary rows and columns, we combined them all into our final dataset. The datasets did not have consistent naming for the state column. Some having State, and others having state. We renamed them all to state and merged on the state column.
+We then added our calculated columns. First we added a party column by taking the highest value from our three political percentage columns, and adding a respective string representation of each state. We understand this is a very naive approach to determining the political stance of a given state but it was the best way to do so with the data we have been using.
+
+
+We then created a summarized table using our new party column to calculate the mean number of collisions per billion miles grouped by a state's political stance.
+Each row in the dataset represents a state and its data. Thus we have 50 observations, one for each state. The relevant variable and their encodings are as follows:
+
+
+Number of drivers involved in fatal collisions per billion miles - float
+
+
+Percentage Of Drivers Involved In Fatal Collisions Who Were Speeding - int
+
+
+Percentage Of Drivers Involved In Fatal Collisions Who Were Alcohol-Impaired - int
+
+
+Percentage Of Drivers Involved In Fatal Collisions Who Were Not Distracted - int
+
+
+Percentage Of Drivers Involved In Fatal Collisions Who Had Not Been Involved In Any Previous Accidents – int
+
+
+Car Insurance Premiums ($) - float
+
+
+Losses incurred by insurance companies for collisions per insured driver ($) – float
+
+
+AverageTemperatureF – float
+
+
+AverageTemperatureAvgAnnualPrecipitationIn – float
+
+
+AverageTemperatureAvgHighF – float
+
+
+AverageTemperatureAvgLowF – float
+
+
+PercentHighSchoolOrHigher – float
+
+
+PercentBachelorsOrHigher – float
+
+
+PoliticalPartiesDemocratLeanDem – int
+
+
+PoliticalPartiesRepublicanLeanRep – int
+
+
+PoliticalPartiesNoLean – int
+
+
+Party - chr
+
+
+In this current state of our dataset, there are no missing values, non-plausible values, or other quality issues in the relevant variables. Since we took care of filtering out unnecessary rows and columns before combining into one dataset.
 
 
 ```{r}
@@ -38,7 +160,6 @@ drivers$party <- apply(drivers[, c("PoliticalPartiesDemocratLeanDem", "Political
   parties <- c("Democrat", "Republican", "NoLean")
   parties[which.max(row)]
 })
-drivers
 ```
 lets start by seeing the relationship driver crashes per state
 ```{r}
