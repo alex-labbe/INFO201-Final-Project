@@ -1,0 +1,98 @@
+---
+title: "Data documentation"
+author: "Alexandre Labbe, Anushka Nayak, Chelsea Pang, Megan Pham"
+
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Bad Drivers
+
+
+Created by 538 from data sourced from the NHTSA and USDOT
+
+
+https://data.world/fivethirtyeight/bad-drivers
+
+
+# Average Temperatures by State 2023
+
+Created by World Population Review from data sourced by the NOAA National Climatic Data Center
+
+https://worldpopulationreview.com/state-rankings/average-temperatures-by-state
+
+# Educational Attainment by State 2023
+
+Created by World Population Review from data sourced by US Census Bureau
+
+https://worldpopulationreview.com/state-rankings/educational-attainment-by-state
+
+# Political Parties by State 2023
+
+Created by World Population Review from data sourced by Pew Research Center
+
+https://worldpopulationreview.com/state-rankings/political-parties-by-state
+
+
+# Final dataset variables
+
+Number of drivers involved in fatal collisions per billion miles - float
+
+
+Percentage Of Drivers Involved In Fatal Collisions Who Were Speeding - int
+
+
+Percentage Of Drivers Involved In Fatal Collisions Who Were Alcohol-Impaired - int
+
+
+Percentage Of Drivers Involved In Fatal Collisions Who Were Not Distracted - int
+
+
+Percentage Of Drivers Involved In Fatal Collisions Who Had Not Been Involved In Any Previous Accidents – int
+
+
+Car Insurance Premiums ($) - float
+
+
+Losses incurred by insurance companies for collisions per insured driver ($) – float
+
+
+AverageTemperatureF – float
+
+AverageTemperatureC – float
+
+
+AverageTemperatureAvgAnnualPrecipitationIn – float
+
+
+AverageTemperatureAvgHighF – float
+
+
+AverageTemperatureAvgLowF – float
+
+
+PercentHighSchoolOrHigher – float
+
+
+PercentBachelorsOrHigher – float
+
+
+PoliticalPartiesDemocratLeanDem – int
+
+
+PoliticalPartiesRepublicanLeanRep – int
+
+
+PoliticalPartiesNoLean – int
+
+
+Party - chr
+
+# Summary
+
+Final data set has 50 rows and 19 columns.
+
+None of the rows have any missing or invalid values.
